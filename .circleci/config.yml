@@ -1,0 +1,38 @@
+version: 2.1
+
+aliases:
+  - &node
+    docker:
+      - image: circleci/node:14.15.2
+
+jobs:
+  test:
+    <<: *node
+    steps:
+      - checkout
+      - run: sudo apt-get -y update
+      - run: sudo apt-get -y install libcairo2-dev libpoppler-qt5-dev poppler-data
+      - run: npm install && npm test
+
+  build_and_deploy:
+    <<: *node
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build -t medika/medika-backend-staging .
+      - run: sudo curl https://cli-assets.heroku.com/install.sh | sh
+      - run: HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:login
+      - run: HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:push -a medika-backend-staging web
+      - run: HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:release -a medika-backend-staging web
+
+workflows:
+  commit_workflow:
+    jobs:
+      - test
+      - build_and_deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - staging

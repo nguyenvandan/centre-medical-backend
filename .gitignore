@@ -1,0 +1,31 @@
+.git
+CVS
+.svn
+.hg
+.lock-wscript
+.wafpickle-N
+yarn-error.log
+.*.swp
+.DS_Store
+._*
+npm-debug.log
+.npmrc
+node_modules
+config.gypi
+*.orig
+package-lock.json
+.env
+.vscode
+.history
+# Created by .ignore support plugin (hsz.mobi)
+.idea/
+/logs/
+/app/templates/
+/app/decision/
+/dist/
+/documents_patient/
+/uploads/
+
+# /public/
+/package-lock.json
+service_account_key.json
